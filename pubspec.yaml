@@ -41,6 +41,7 @@ dependencies:
   flutter_svg:
   provider: ^6.1.5+1
   shared_preferences:
+  dio: ^5.11.1
 
 dev_dependencies:
   flutter_test:
