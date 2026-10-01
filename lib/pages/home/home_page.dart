@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../core/constants/app_colors.dart';
 import '../../providers/meal_provider.dart';
+import '../meal_details/meal_details_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -230,7 +231,13 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                     IconButton(
                                       onPressed: () {
-                                        // Navigate to Details
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                MealDetailsPage(meal: meal),
+                                          ),
+                                        );
                                       },
                                       icon: Icon(
                                         Icons.arrow_forward,
@@ -548,7 +555,13 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                     child: IconButton(
                                       onPressed: () {
-                                        // Details
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                MealDetailsPage(meal: meal),
+                                          ),
+                                        );
                                       },
                                       icon: Icon(
                                         Icons.arrow_forward,

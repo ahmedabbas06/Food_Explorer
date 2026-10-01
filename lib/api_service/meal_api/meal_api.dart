@@ -72,4 +72,25 @@ class MealApi {
       throw Exception('Failed to search meals');
     }
   }
+
+  // ==================== Get Meal Details ====================
+
+  Future<MealModel?> getMealDetails(String id) async {
+    try {
+      final response = await dio.get(
+        'lookup.php',
+        queryParameters: {'i': id},
+      );
+
+      final data = response.data;
+
+      if (data['meals'] == null || (data['meals'] as List).isEmpty) {
+        return null;
+      }
+
+      return MealModel.fromJson(data['meals'][0]);
+    } catch (e) {
+      throw Exception('Failed to load meal details');
+    }
+  }
 }
