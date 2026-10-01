@@ -66,7 +66,6 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(height: 24),
 
             // ==================== Featured Recipe ====================
-            // ==================== Featured Recipe ====================
             Text(
               'Featured Recipe',
               style: TextStyle(
@@ -124,7 +123,6 @@ class _HomePageState extends State<HomePage> {
                   clipBehavior: Clip.antiAlias,
                   child: Stack(
                     children: [
-                      // ==================== Image ====================
                       Image.network(
                         meal.image,
                         width: double.infinity,
@@ -141,7 +139,6 @@ class _HomePageState extends State<HomePage> {
                         },
                       ),
 
-                      // ==================== Gradient ====================
                       Container(
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
@@ -176,7 +173,6 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
 
-                      // ==================== Meal Info + Details ====================
                       Positioned(
                         left: 16,
                         right: 16,
@@ -500,7 +496,6 @@ class _HomePageState extends State<HomePage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // ==================== Image ====================
                           Expanded(
                             child: Stack(
                               children: [
