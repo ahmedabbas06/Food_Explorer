@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food_explorer/models/meal_model/meal_model.dart';
-
 import '../../api_service/meal_api/meal_api.dart';
 import '../favourate/favourate_page.dart';
+import '../favourate/favourate_store.dart';
 
 class MealDetailsPage extends StatefulWidget {
   final MealModel meal;
@@ -22,19 +22,33 @@ class _MealDetailsPageState extends State<MealDetailsPage> {
 
   final MealApi mealApi = MealApi();
 
-  bool isFavorite = false;
-
   @override
   void initState() {
     super.initState();
 
-    steps = widget.meal.instructions
-        .split(RegExp(r'\r?\n|\.'))
-        .map((step) => step.trim())
-        .where((step) => step.isNotEmpty)
-        .toList();
+    steps = parseSteps(widget.meal.instructions);
 
     getMealDetails();
+  }
+
+  /// Splits raw instructions into clean steps:
+  /// - drops lines that are only a "step N" label
+  /// - strips a leading "step N" prefix from a line
+  /// - splits on sentence ends (not on every dot, so "1.5" or "tsp." survive)
+  List<String> parseSteps(String raw) {
+    final labelOnly = RegExp(r'^step\s*\d+\s*[:.\-]?\s*$', caseSensitive: false);
+    final prefix = RegExp(r'^step\s*\d+\s*[:.\-]?\s*', caseSensitive: false);
+
+    return raw
+        .split(RegExp(r'\r?\n'))
+        .map((l) => l.trim())
+        .where((l) => l.isNotEmpty && !labelOnly.hasMatch(l))
+        .map((l) => l.replaceFirst(prefix, ''))
+        .map((l) => l.replaceAll(RegExp(r'\s+([.,;:!?])'), r'\1'))
+        .expand((l) => l.split(RegExp(r'(?<=[.!?])\s+(?=[A-Z])')))
+        .map((s) => s.trim())
+        .where((s) => s.isNotEmpty)
+        .toList();
   }
 
   Future<void> getMealDetails() async {
@@ -48,11 +62,7 @@ class _MealDetailsPageState extends State<MealDetailsPage> {
         isLoading = false;
 
         if (details != null) {
-          steps = details.instructions
-              .split(RegExp(r'\r?\n|\.'))
-              .map((step) => step.trim())
-              .where((step) => step.isNotEmpty)
-              .toList();
+          steps = parseSteps(details.instructions);
         }
       });
     } catch (e) {
@@ -70,11 +80,74 @@ class _MealDetailsPageState extends State<MealDetailsPage> {
     return 'https://www.themealdb.com/images/ingredients/$name-Small.png';
   }
 
-  Widget buildIngredientCard(String ingredient, String measure) {
+  Widget buildSectionTitle(String title) {
+    return Row(
+      children: [
+        SizedBox(width: 20),
+        Container(
+          width: 5,
+          height: 30,
+          decoration: BoxDecoration(
+            color: Color(0xffff6e00),
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        SizedBox(width: 10),
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget buildInfoCard(IconData icon, String label, String value) {
     return Expanded(
       child: Container(
         height: 120,
         padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Color(0xff1c1c21),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Column(
+          children: [
+            Icon(icon, color: Color(0xfffab65d)),
+            FittedBox(
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xff797270),
+                ),
+              ),
+            ),
+            FittedBox(
+              child: Text(
+                value,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildIngredientCard(String ingredient, String measure) {
+    return Expanded(
+      child: Container(
+        height: 120,
+        padding: EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: Color(0xff1f1f22),
           borderRadius: BorderRadius.circular(20),
@@ -85,13 +158,13 @@ class _MealDetailsPageState extends State<MealDetailsPage> {
               borderRadius: BorderRadius.circular(15),
               child: Image.network(
                 getIngredientImage(ingredient),
-                width: 70,
-                height: 70,
+                width: 56,
+                height: 56,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
-                    width: 70,
-                    height: 70,
+                    width: 56,
+                    height: 56,
                     color: Color(0xff2a2a2d),
                     child: Icon(
                       Icons.restaurant,
@@ -103,34 +176,34 @@ class _MealDetailsPageState extends State<MealDetailsPage> {
               ),
             ),
 
-            SizedBox(width: 10),
+            SizedBox(width: 8),
 
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  FittedBox(
-                    child: Text(
-                      ingredient,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                  Text(
+                    ingredient,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                   ),
 
                   SizedBox(height: 5),
 
-                  FittedBox(
-                    child: Text(
-                      measure,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xfffab65d),
-                      ),
+                  Text(
+                    measure,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xfffab65d),
                     ),
                   ),
                 ],
@@ -141,10 +214,6 @@ class _MealDetailsPageState extends State<MealDetailsPage> {
       ),
     );
   }
-
-  // =========================
-  // STEP CARD
-  // =========================
 
   Widget buildStepCard(int index, String step) {
     return Row(
@@ -275,7 +344,6 @@ class _MealDetailsPageState extends State<MealDetailsPage> {
                   width: double.infinity,
                   height: 300,
                   fit: BoxFit.cover,
-
                 ),
               ),
             ),
@@ -350,168 +418,20 @@ class _MealDetailsPageState extends State<MealDetailsPage> {
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: Row(
                 children: [
-                  Expanded(
-                    child: Container(
-                      height: 120,
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Color(0xff1c1c21),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Column(
-                        children: [
-                          Icon(CupertinoIcons.time, color: Color(0xfffab65d)),
-
-                          FittedBox(
-                            child: Text(
-                              "Prep",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xff797270),
-                              ),
-                            ),
-                          ),
-
-                          FittedBox(
-                            child: Text(
-                              "15 min",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
+                  buildInfoCard(CupertinoIcons.time, "Prep", "15 min"),
                   SizedBox(width: 10),
-
-                  Expanded(
-                    child: Container(
-                      height: 120,
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Color(0xff1c1c21),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Column(
-                        children: [
-                          Icon(
-                            Icons.local_fire_department,
-                            color: Color(0xfffab65d),
-                          ),
-
-                          FittedBox(
-                            child: Text(
-                              "Energy",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xff797270),
-                              ),
-                            ),
-                          ),
-
-                          FittedBox(
-                            child: Text(
-                              "250 kcal",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                  buildInfoCard(
+                    Icons.local_fire_department,
+                    "Energy",
+                    "250 kcal",
                   ),
-
                   SizedBox(width: 10),
-
-                  Expanded(
-                    child: Container(
-                      height: 120,
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Color(0xff1c1c21),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Column(
-                        children: [
-                          Icon(Icons.grade, color: Color(0xfffab65d)),
-
-                          FittedBox(
-                            child: Text(
-                              "Skill",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xff797270),
-                              ),
-                            ),
-                          ),
-
-                          FittedBox(
-                            child: Text(
-                              "Easy",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
+                  buildInfoCard(Icons.grade, "Skill", "Easy"),
                   SizedBox(width: 10),
-
-                  Expanded(
-                    child: Container(
-                      height: 120,
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Color(0xff1c1c21),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Column(
-                        children: [
-                          Icon(
-                            Icons.food_bank_outlined,
-                            color: Color(0xfffab65d),
-                          ),
-
-                          FittedBox(
-                            child: Text(
-                              "Yield",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xff797270),
-                              ),
-                            ),
-                          ),
-
-                          FittedBox(
-                            child: Text(
-                              "2 servings",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                  buildInfoCard(
+                    Icons.food_bank_outlined,
+                    "Yield",
+                    "2 servings",
                   ),
                 ],
               ),
@@ -522,40 +442,23 @@ class _MealDetailsPageState extends State<MealDetailsPage> {
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    SizedBox(width: 20),
-                    Container(
-                      width: 5,
-                      height: 30,
-                      decoration: BoxDecoration(
-                        color: Color(0xffff6e00),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    SizedBox(width: 10),
-                    Text(
-                      "About this dish",
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
+                buildSectionTitle("About this dish"),
                 SizedBox(height: 10),
                 Container(
+                  width: double.infinity,
+                  margin: EdgeInsets.symmetric(horizontal: 10),
                   padding: EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: Color(0xff1c1c21),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    currentMeal.instructions.isEmpty
+                    steps.isEmpty
                         ? "No description available."
-                        : currentMeal.instructions,
-                    style: TextStyle(fontSize: 20, color: Color(0xff797270)),
+                        : steps.join(' '),
+                    maxLines: 4,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 18, color: Color(0xffb5aeac)),
                   ),
                 ),
               ],
@@ -563,28 +466,7 @@ class _MealDetailsPageState extends State<MealDetailsPage> {
 
             SizedBox(height: 15),
 
-            Row(
-              children: [
-                SizedBox(width: 20),
-                Container(
-                  width: 5,
-                  height: 30,
-                  decoration: BoxDecoration(
-                    color: Color(0xffff6e00),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                SizedBox(width: 10),
-                Text(
-                  "Ingredients",
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
+            buildSectionTitle("Ingredients"),
 
             SizedBox(height: 10),
 
@@ -607,9 +489,9 @@ class _MealDetailsPageState extends State<MealDetailsPage> {
                 child: Column(
                   children: [
                     for (
-                      int index = 0;
-                      index < currentMeal.ingredients.length;
-                      index += 2
+                    int index = 0;
+                    index < currentMeal.ingredients.length;
+                    index += 2
                     )
                       Padding(
                         padding: EdgeInsets.only(bottom: 20),
@@ -642,106 +524,87 @@ class _MealDetailsPageState extends State<MealDetailsPage> {
 
             SizedBox(height: 20),
 
-            // ==================================================
-            // STEP-BY-STEP GUIDE
-            // ==================================================
-            Row(
-              children: [
-                SizedBox(width: 20),
-                Container(
-                  width: 5,
-                  height: 30,
-                  decoration: BoxDecoration(
-                    color: Color(0xffff6e00),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                SizedBox(width: 10),
-                Text(
-                  "Step-by-step guide",
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
+            buildSectionTitle("Step-by-step guide"),
 
             SizedBox(height: 15),
 
             Container(
               margin: EdgeInsets.symmetric(horizontal: 10),
               padding: EdgeInsets.all(15),
-
               decoration: BoxDecoration(
                 color: Color(0xff1c1c21),
                 borderRadius: BorderRadius.circular(20),
               ),
-
               child: steps.isEmpty
                   ? Padding(
-                      padding: EdgeInsets.all(15),
-                      child: Center(
-                        child: Text(
-                          "No instructions available.",
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Color(0xff797270),
-                          ),
-                        ),
-                      ),
-                    )
-                  : ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: steps.length,
-                      itemBuilder: (context, index) {
-                        return buildStepCard(index, steps[index]);
-                      },
+                padding: EdgeInsets.all(15),
+                child: Center(
+                  child: Text(
+                    "No instructions available.",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Color(0xff797270),
                     ),
+                  ),
+                ),
+              )
+                  : ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: steps.length,
+                itemBuilder: (context, index) {
+                  return buildStepCard(index, steps[index]);
+                },
+              ),
             ),
 
             SizedBox(height: 50),
 
-            // ==================================================
-            // FAVORITE
-            // ==================================================
-            SizedBox(
-              width: double.infinity,
-              height: 60,
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  setState(() {
-                    isFavorite = !isFavorite;
-                  });
+            ValueListenableBuilder<List<MealModel>>(
+              valueListenable: FavouritesStore.instance.meals,
+              builder: (context, _, __) {
+                final isFav = FavouritesStore.instance.isFavourite(currentMeal);
 
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => FavouritePage(),
+                return SizedBox(
+                  width: double.infinity,
+                  height: 60,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      final wasFav =
+                      FavouritesStore.instance.isFavourite(currentMeal);
+                      FavouritesStore.instance.toggle(currentMeal);
+
+                      // After adding, go to the Favourite page.
+                      if (!wasFav) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const FavouritePage(),
+                          ),
+                        );
+                      }
+                    },
+                    icon: Icon(
+                      isFav ? Icons.favorite : Icons.favorite_border,
+                      color: Colors.black,
                     ),
-                  );
-                },
-                icon: Icon(
-                  isFavorite ? Icons.favorite : Icons.favorite_border,
-                  color: Colors.black,
-                ),
-                label: Text(
-                  isFavorite ? "Remove from Favorites" : "Add to Favorites",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                    label: Text(
+                      isFav ? "Remove from Favorites" : "Add to Favorites",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xffff6e00),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
                   ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xffff6e00),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                ),
-              ),
+                );
+              },
             ),
             SizedBox(height: 20),
           ],
