@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:food_explorer/pages/navigation/bottom_nav_page.dart';
+import 'package:food_explorer/pages/favourate/favourate_page.dart';
+import 'package:food_explorer/pages/splash/splash_page.dart';
 import 'package:food_explorer/providers/auth_provider.dart';
 import 'package:food_explorer/providers/meal_provider.dart';
 import 'package:provider/provider.dart';
@@ -33,9 +34,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: BottomNavPage(),
-    );
+    return MaterialApp(debugShowCheckedModeBanner: false, home: SplashPage(prefs: prefs));
   }
 }
