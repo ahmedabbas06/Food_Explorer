@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_explorer/pages/auth/signup_page/widgets/signup_already_have_account_widget.dart';
 import 'package:food_explorer/pages/auth/signup_page/widgets/signup_button_widget.dart';
 import 'package:food_explorer/pages/auth/signup_page/widgets/signup_header_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../../../providers/auth_provider.dart';
-import '../../home/home_page.dart';
+import '../../navigation/bottom_nav_page.dart';
 import '../login_page/widgets/login_auth_text_field_widget.dart';
 import '../login_page/widgets/login_field_label_widget.dart';
 
@@ -13,10 +14,11 @@ class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
 
   @override
-  State<SignupPage> createState() => _SignupPageState();
+  State<SignupPage> createState() => SignupPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
+class SignupPageState extends State<SignupPage> {
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -24,6 +26,7 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   void dispose() {
+    nameController.dispose();
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
@@ -32,21 +35,20 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF111114),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 30),
+          padding: EdgeInsets.symmetric(vertical: 20.h),
           child: LayoutBuilder(
-            builder: (context, raints) {
+            builder: (context, constraints) {
               return SingleChildScrollView(
-                keyboardDismissBehavior:
-                    ScrollViewKeyboardDismissBehavior.onDrag,
-                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
-                    minHeight: raints.maxHeight - 40,
-                    maxWidth: 430,
+                    minHeight: constraints.maxHeight - 40.h,
+                    maxWidth: 430.w,
                   ),
                   child: Form(
                     key: formKey,
@@ -55,11 +57,32 @@ class _SignupPageState extends State<SignupPage> {
                       children: [
                         SignupHeader(),
 
-                        SizedBox(height: 32),
+                        SizedBox(height: 24.h),
+
+                        AuthFieldLabel(text: 'Full Name'),
+
+                        SizedBox(height: 8.h),
+
+                        AuthTextField(
+                          controller: nameController,
+                          hintText: 'Ahmed Mohamed',
+                          prefixIcon: Icons.person_outline,
+                          keyboardType: TextInputType.name,
+                          textInputAction: TextInputAction.next,
+                          autofillHints: [AutofillHints.name],
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'Please enter your name';
+                            }
+                            return null;
+                          },
+                        ),
+
+                        SizedBox(height: 18.h),
 
                         AuthFieldLabel(text: 'Email Address'),
 
-                        SizedBox(height: 9),
+                        SizedBox(height: 8.h),
 
                         AuthTextField(
                           controller: emailController,
@@ -72,16 +95,15 @@ class _SignupPageState extends State<SignupPage> {
                             if (value == null || value.trim().isEmpty) {
                               return 'Please enter your email';
                             }
-
                             return null;
                           },
                         ),
 
-                        SizedBox(height: 22),
+                        SizedBox(height: 18.h),
 
                         AuthFieldLabel(text: 'Password'),
 
-                        SizedBox(height: 9),
+                        SizedBox(height: 8.h),
 
                         AuthTextField(
                           controller: passwordController,
@@ -94,12 +116,11 @@ class _SignupPageState extends State<SignupPage> {
                             if (value == null || value.length < 6) {
                               return 'Password must be at least 6 characters';
                             }
-
                             return null;
                           },
                         ),
 
-                        SizedBox(height: 28),
+                        SizedBox(height: 24.h),
 
                         Consumer<AuthProvider>(
                           builder: (context, authProvider, child) {
@@ -111,6 +132,7 @@ class _SignupPageState extends State<SignupPage> {
                                 }
 
                                 await authProvider.signup(
+                                  nameController.text.trim(),
                                   emailController.text.trim(),
                                   passwordController.text.trim(),
                                 );
@@ -123,7 +145,6 @@ class _SignupPageState extends State<SignupPage> {
                                       content: Text(authProvider.errorMessage!),
                                     ),
                                   );
-
                                   return;
                                 }
 
@@ -131,16 +152,16 @@ class _SignupPageState extends State<SignupPage> {
                                   Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (_) => const HomePage(),
+                                      builder: (context) => BottomNavPage(),
                                     ),
-                                        (route) => false,
+                                    (route) => false,
                                   );
                                 }
                               },
                             );
                           },
                         ),
-                        SizedBox(height: 24),
+                        SizedBox(height: 20.h),
 
                         AlreadyHaveAccountButton(
                           onPressed: () {

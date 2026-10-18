@@ -23,8 +23,8 @@ class AuthFooterWidget extends StatelessWidget {
         children: [
           Text(
             '$text ',
-            style: const TextStyle(
-              color: Color(0xFFD4BBB1),
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
               fontSize: 14,
             ),
           ),

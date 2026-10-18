@@ -16,7 +16,10 @@ class AlreadyHaveAccountButton extends StatelessWidget {
           children: [
             TextSpan(
               text: 'Already have an account? ',
-              style: TextStyle(color: Color(0xFFD4BBB1), fontSize: 14),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                fontSize: 14,
+              ),
             ),
             WidgetSpan(
               alignment: PlaceholderAlignment.middle,

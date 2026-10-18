@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_explorer/pages/auth/login_page/widgets/login_button_widget.dart';
 import 'package:food_explorer/pages/auth/login_page/widgets/login_create_account_widget.dart';
 import 'package:food_explorer/pages/auth/login_page/widgets/login_forgot_password_widget.dart';
@@ -7,7 +8,7 @@ import 'package:food_explorer/pages/auth/signup_page/signup_page.dart';
 import 'package:provider/provider.dart';
 
 import '../../../providers/auth_provider.dart';
-import '../../home/home_page.dart';
+import '../../navigation/bottom_nav_page.dart';
 import '../signup_page/widgets/signup_auth_test_field_widget.dart';
 import '../signup_page/widgets/signup_field_Label_widget.dart';
 
@@ -15,10 +16,10 @@ class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<LoginPage> createState() => LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -34,21 +35,20 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF111114),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 30),
+          padding: EdgeInsets.symmetric(vertical: 20.h),
           child: LayoutBuilder(
-            builder: (context, raints) {
+            builder: (context, constraints) {
               return SingleChildScrollView(
-                keyboardDismissBehavior:
-                    ScrollViewKeyboardDismissBehavior.onDrag,
-                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
-                    minHeight: raints.maxHeight - 40,
-                    maxWidth: 430,
+                    minHeight: constraints.maxHeight - 40.h,
+                    maxWidth: 430.w,
                   ),
                   child: Form(
                     key: formKey,
@@ -57,11 +57,11 @@ class _LoginPageState extends State<LoginPage> {
                       children: [
                         LoginHeader(),
 
-                        SizedBox(height: 34),
+                        SizedBox(height: 28.h),
 
                         AuthFieldLabel(text: 'Email Address'),
 
-                        SizedBox(height: 9),
+                        SizedBox(height: 8.h),
 
                         AuthTextField(
                           controller: emailController,
@@ -74,16 +74,15 @@ class _LoginPageState extends State<LoginPage> {
                             if (value == null || value.trim().isEmpty) {
                               return 'Please enter your email';
                             }
-
                             return null;
                           },
                         ),
 
-                        SizedBox(height: 22),
+                        SizedBox(height: 18.h),
 
                         AuthFieldLabel(text: 'Password'),
 
-                        SizedBox(height: 9),
+                        SizedBox(height: 8.h),
 
                         AuthTextField(
                           controller: passwordController,
@@ -96,16 +95,15 @@ class _LoginPageState extends State<LoginPage> {
                             if (value == null || value.isEmpty) {
                               return 'Please enter your password';
                             }
-
                             return null;
                           },
                         ),
 
-                        SizedBox(height: 8),
+                        SizedBox(height: 8.h),
 
                         ForgotPasswordText(),
 
-                        SizedBox(height: 24),
+                        SizedBox(height: 20.h),
 
                         Consumer<AuthProvider>(
                           builder: (context, authProvider, child) {
@@ -129,7 +127,6 @@ class _LoginPageState extends State<LoginPage> {
                                       content: Text(authProvider.errorMessage!),
                                     ),
                                   );
-
                                   return;
                                 }
 
@@ -137,7 +134,7 @@ class _LoginPageState extends State<LoginPage> {
                                   Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (_) => const HomePage(),
+                                      builder: (context) => BottomNavPage(),
                                     ),
                                     (route) => false,
                                   );
@@ -146,14 +143,14 @@ class _LoginPageState extends State<LoginPage> {
                             );
                           },
                         ),
-                        SizedBox(height: 24),
+                        SizedBox(height: 20.h),
 
                         CreateAccountText(
                           onPressed: () {
                             Navigator.push(
                               context,
                               PageRouteBuilder(
-                                pageBuilder: (_, __, ___) => SignupPage(),
+                                pageBuilder: (context, animation, secondaryAnimation) => SignupPage(),
                                 transitionDuration: Duration.zero,
                                 reverseTransitionDuration: Duration.zero,
                               ),

@@ -1,54 +1,47 @@
 import 'package:flutter/material.dart';
-import 'package:food_explorer/core/constants/app_colors.dart';
-import 'package:food_explorer/pages/home/home_page.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:food_explorer/pages/navigation/widgets/floating_bottom_nav_widget.dart';
+
+import '../favourite/favourite_page.dart';
+import '../home/home_page.dart';
+import '../settings_pages/setting_page/settings_page.dart';
 
 class BottomNavPage extends StatefulWidget {
   const BottomNavPage({super.key});
 
   @override
-  State<BottomNavPage> createState() => _BottomNavPageState();
+  State<BottomNavPage> createState() => BottomNavPageState();
 }
 
-class _BottomNavPageState extends State<BottomNavPage> {
+class BottomNavPageState extends State<BottomNavPage> {
   int currentIndex = 0;
-
-  final List<Widget> pages = [
-    const HomePage(),
-    const Center(
-      child: Text("Favorite", style: TextStyle(color: Colors.white)),
-    ),
-    const Center(
-      child: Text("Setting", style: TextStyle(color: Colors.white)),
-    ),
-  ];
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> pages = [HomePage(), FavouritePage(), SettingsPage()];
+
+    final isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
+
     return Scaffold(
-      backgroundColor: AppColors.black,
-
-      body: pages[currentIndex],
-
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: AppColors.black,
-        selectedItemColor: AppColors.primary,
-        unselectedItemColor: Colors.grey,
-        currentIndex: currentIndex,
-
-        onTap: (index) {
-          setState(() {
-            currentIndex = index;
-          });
-        },
-
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: "Favorite",
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Setting"),
+      resizeToAvoidBottomInset: false,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: Stack(
+        children: [
+          Positioned.fill(child: pages[currentIndex]),
+          if (!isKeyboardOpen)
+            Positioned(
+              left: 16.w,
+              right: 16.w,
+              bottom: 18.h,
+              child: FloatingBottomNav(
+                currentIndex: currentIndex,
+                onItemSelected: (index) {
+                  setState(() {
+                    currentIndex = index;
+                  });
+                },
+              ),
+            ),
         ],
       ),
     );

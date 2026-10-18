@@ -45,7 +45,7 @@ class LoginHeader extends StatelessWidget {
             'Sign in to explore delicious recipes',
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Color(0xFFE4C7BC),
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
               fontSize: 15,
               fontWeight: FontWeight.w400,
             ),

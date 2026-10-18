@@ -103,7 +103,7 @@ class _SplashPageState extends State<SplashPage>
                  SizedBox(height: 24),
 
                  Text(
-                  'FOOD EXPLORER',
+                  'Akelaty',
                   style: TextStyle(
                     color: Color(0xFFFF7200),
                     fontSize: 26,

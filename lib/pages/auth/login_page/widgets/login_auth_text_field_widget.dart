@@ -40,24 +40,24 @@ class _AuthTextFieldState extends State<AuthTextField> {
       keyboardType: widget.keyboardType,
       textInputAction: widget.textInputAction,
       autofillHints: widget.autofillHints,
-      style:  TextStyle(
-        color: Color(0xFFE7E2E1),
+      style: TextStyle(
+        color: Theme.of(context).colorScheme.onSurface,
         fontSize: 16,
       ),
       cursorColor: AppColors.primary,
       decoration: InputDecoration(
         filled: true,
-        fillColor:  Color(0xFF1B1B1E),
+        fillColor: Theme.of(context).colorScheme.surface,
 
         hintText: widget.hintText,
-        hintStyle:  TextStyle(
-          color: Color(0xFF725C53),
+        hintStyle: TextStyle(
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
           fontSize: 15,
         ),
 
         prefixIcon: Icon(
           widget.prefixIcon,
-          color:  Color(0xFFB99587),
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
           size: 22,
         ),
 
@@ -73,25 +73,29 @@ class _AuthTextFieldState extends State<AuthTextField> {
             obscureText
                 ? Icons.visibility_outlined
                 : Icons.visibility_off_outlined,
-            color:  Color(0xFFB99587),
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
             size: 22,
           ),
         )
             : null,
 
-        contentPadding:  EdgeInsets.symmetric(
+        contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
           vertical: 16,
         ),
 
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide.none,
+          borderSide: BorderSide(
+            color: Theme.of(context).dividerColor,
+          ),
         ),
 
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide.none,
+          borderSide: BorderSide(
+            color: Theme.of(context).dividerColor,
+          ),
         ),
 
         focusedBorder: OutlineInputBorder(

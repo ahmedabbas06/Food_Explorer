@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:food_explorer/pages/auth/forgot_password_page/widgets/auth_footer_widget.dart';
 import 'package:food_explorer/pages/auth/forgot_password_page/widgets/forgot_password_button_widget.dart';
 import 'package:food_explorer/pages/auth/forgot_password_page/widgets/forgot_password_email_field_widget.dart';
@@ -11,10 +12,10 @@ class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
 
   @override
-  State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
+  State<ForgotPasswordPage> createState() => ForgotPasswordPageState();
 }
 
-class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
+class ForgotPasswordPageState extends State<ForgotPasswordPage> {
   final emailController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
@@ -24,7 +25,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     super.dispose();
   }
 
-  Future<void> _resetPassword() async {
+  Future<void> resetPassword() async {
     if (!formKey.currentState!.validate()) {
       return;
     }
@@ -36,15 +37,14 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     if (!mounted) return;
 
     if (authProvider.errorMessage != null) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(authProvider.errorMessage!)));
-
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(authProvider.errorMessage!)),
+      );
       return;
     }
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Password reset email sent successfully.')),
+      SnackBar(content: Text('Password reset email sent successfully.')),
     );
 
     Navigator.pop(context);
@@ -53,36 +53,36 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF111114),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: SingleChildScrollView(
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          padding: EdgeInsets.symmetric(horizontal: 24),
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
           child: Form(
             key: formKey,
             child: Column(
               children: [
-                SizedBox(height: 70),
+                SizedBox(height: 50.h),
 
                 ForgotPasswordHeader(),
 
-                SizedBox(height: 48),
+                SizedBox(height: 36.h),
 
                 ForgotPasswordEmailField(controller: emailController),
 
-                SizedBox(height: 28),
+                SizedBox(height: 24.h),
 
                 Consumer<AuthProvider>(
                   builder: (context, authProvider, child) {
                     return ForgotPasswordButton(
                       isLoading: authProvider.isLoading,
-                      onPressed: _resetPassword,
+                      onPressed: resetPassword,
                     );
                   },
                 ),
 
-                SizedBox(height: 28),
+                SizedBox(height: 24.h),
 
                 AuthFooterWidget(
                   text: 'Remember your password?',
@@ -92,7 +92,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   },
                 ),
 
-                SizedBox(height: 30),
+                SizedBox(height: 24.h),
               ],
             ),
           ),

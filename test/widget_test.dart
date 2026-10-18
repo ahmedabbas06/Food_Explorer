@@ -1,4 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:food_explorer/providers/theme_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:food_explorer/main.dart';
@@ -10,11 +12,15 @@ void main() {
     final prefs = await SharedPreferences.getInstance();
 
     await tester.pumpWidget(
-      MyApp(prefs: prefs),
+      ChangeNotifierProvider(
+        create: (_) => ThemeProvider(prefs),
+        child: MyApp(prefs: prefs),
+      ),
     );
 
+    await tester.pump(const Duration(seconds: 4));
     await tester.pumpAndSettle();
 
     expect(find.byType(MyApp), findsOneWidget);
   });
-}
+}
