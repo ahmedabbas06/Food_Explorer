@@ -14,8 +14,8 @@ class AuthFieldLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style:  TextStyle(
-        color: Color(0xFFE4C7BC),
+      style: TextStyle(
+        color: Theme.of(context).colorScheme.onSurface,
         fontSize: 17,
         fontWeight: FontWeight.w500,
       ),

@@ -1,6 +1,6 @@
 {
-    "name": "food_explorer",
-    "short_name": "food_explorer",
+    "name": "Akelaty - أكلاتي",
+    "short_name": "Akelaty",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../providers/auth_provider.dart';
-import '../../home/home_page.dart';
+import '../../navigation/bottom_nav_page.dart';
 import '../login_page/login_page.dart';
 
 class AuthGate extends StatefulWidget {
@@ -18,6 +18,7 @@ class _AuthGateState extends State<AuthGate> {
     super.initState();
 
     Future.microtask(() {
+      if (!mounted) return;
       context.read<AuthProvider>().checkCurrentUser();
     });
   }
@@ -35,9 +36,9 @@ class _AuthGateState extends State<AuthGate> {
     }
 
     if (authProvider.currentUser != null) {
-      return const HomePage();
+      return  BottomNavPage();
     }
 
-    return const LoginPage();
+    return  LoginPage();
   }
 }

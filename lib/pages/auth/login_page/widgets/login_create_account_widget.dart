@@ -20,7 +20,7 @@ class CreateAccountText extends StatelessWidget {
             TextSpan(
               text: "Don't have an account? ",
               style: TextStyle(
-                color: Color(0xFFD4BBB1),
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
                 fontSize: 14,
               ),
             ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,10 +13,10 @@ class OnBoardingScreen extends StatelessWidget {
     required this.prefs,
   });
 
-  static  Color backgroundColor = Color(0xFF111114);
-  static  Color textColor = Color(0xFFE7E2E1);
-  static  Color secondaryTextColor = Color(0xFFD1B4A9);
-  static  Color primaryColor = Color(0xFFFF7200);
+  static Color backgroundColor = Color(0xFF111114);
+  static Color textColor = Color(0xFFE7E2E1);
+  static Color secondaryTextColor = Color(0xFFD1B4A9);
+  static Color primaryColor = Color(0xFFFF7200);
 
   @override
   Widget build(BuildContext context) {
@@ -28,12 +29,11 @@ class OnBoardingScreen extends StatelessWidget {
           pages: [
             PageViewModel(
               title: 'Discover Delicious Meals',
-              body:
-              'Explore a variety of delicious recipes from around the world.',
+              body: 'Explore a variety of delicious recipes from around the world.',
               image: ClipRRect(
-                borderRadius: BorderRadius.circular(28),
+                borderRadius: BorderRadius.circular(28.r),
                 child: Transform.scale(
-                  scale: 1.3,
+                  scale: 1.2,
                   child: Image.asset(
                     'assets/on1.png',
                     fit: BoxFit.contain,
@@ -45,12 +45,11 @@ class OnBoardingScreen extends StatelessWidget {
 
             PageViewModel(
               title: 'Find Your Favorite Recipes',
-              body:
-              "Search through different meals and discover recipes you'll love.",
+              body: "Search through different meals and discover recipes you'll love.",
               image: ClipRRect(
-                borderRadius: BorderRadius.circular(28),
+                borderRadius: BorderRadius.circular(28.r),
                 child: Transform.scale(
-                  scale: 1.3,
+                  scale: 1.2,
                   child: Image.asset(
                     'assets/on2.png',
                     fit: BoxFit.contain,
@@ -62,12 +61,11 @@ class OnBoardingScreen extends StatelessWidget {
 
             PageViewModel(
               title: 'Cook Something Amazing',
-              body:
-              'Get inspired, explore new flavors, and enjoy cooking at home.',
+              body: 'Get inspired, explore new flavors, and enjoy cooking at home.',
               image: ClipRRect(
-                borderRadius: BorderRadius.circular(28),
+                borderRadius: BorderRadius.circular(28.r),
                 child: Transform.scale(
-                  scale: 1,
+                  scale: 1.0,
                   child: Image.asset(
                     'assets/on3.png',
                     fit: BoxFit.contain,
@@ -80,58 +78,58 @@ class OnBoardingScreen extends StatelessWidget {
 
           showSkipButton: true,
 
-          skip:  Text(
+          skip: Text(
             'Skip',
             style: TextStyle(
               color: secondaryTextColor,
-              fontSize: 16,
+              fontSize: 15.sp,
               fontWeight: FontWeight.w500,
             ),
           ),
 
-          next:  Icon(
+          next: Icon(
             Icons.arrow_forward_rounded,
             color: primaryColor,
-            size: 28,
+            size: 26.r,
           ),
 
-          done:  Text(
+          done: Text(
             'Get Started',
             style: TextStyle(
               color: primaryColor,
-              fontSize: 16,
+              fontSize: 15.sp,
               fontWeight: FontWeight.w600,
             ),
           ),
 
-          onDone: () => _onIntroEnd(context),
-          onSkip: () => _onIntroEnd(context),
+          onDone: () => onIntroEnd(context),
+          onSkip: () => onIntroEnd(context),
 
           dotsDecorator: DotsDecorator(
-            size:  Size(8, 8),
-            activeSize:  Size(24, 8),
+            size: Size(8.w, 8.h),
+            activeSize: Size(24.w, 8.h),
             activeColor: primaryColor,
-            color:  Color(0xFF5B4A43),
-            spacing:  EdgeInsets.symmetric(horizontal: 4),
+            color: Color(0xFF5B4A43),
+            spacing: EdgeInsets.symmetric(horizontal: 4.w),
             activeShape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(20.r),
             ),
           ),
 
-          globalFooter:  SizedBox(height: 8),
+          globalFooter: SizedBox(height: 8.h),
 
           curve: Curves.easeInOut,
 
           animationDuration: 350,
 
-          controlsMargin:  EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 8,
+          controlsMargin: EdgeInsets.symmetric(
+            horizontal: 16.w,
+            vertical: 8.h,
           ),
 
-          controlsPadding:  EdgeInsets.symmetric(
-            horizontal: 8,
-            vertical: 8,
+          controlsPadding: EdgeInsets.symmetric(
+            horizontal: 8.w,
+            vertical: 8.h,
           ),
 
           showBackButton: false,
@@ -140,7 +138,7 @@ class OnBoardingScreen extends StatelessWidget {
     );
   }
 
-  void _onIntroEnd(BuildContext context) async {
+  void onIntroEnd(BuildContext context) async {
     await prefs.setBool('onboardingCompleted', true);
 
     if (!context.mounted) return;
@@ -148,42 +146,43 @@ class OnBoardingScreen extends StatelessWidget {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (_) => const LoginPage(),
+        builder: (context) => LoginPage(),
       ),
     );
   }
+
   PageDecoration getPageDecoration() {
-    return  PageDecoration(
+    return PageDecoration(
       pageColor: backgroundColor,
 
       imagePadding: EdgeInsets.only(
-        top: 30,
-        left: 24,
-        right: 24,
-        bottom: 30,
+        top: 20.h,
+        left: 20.w,
+        right: 20.w,
+        bottom: 20.h,
       ),
 
       titlePadding: EdgeInsets.symmetric(
-        horizontal: 24,
-        vertical: 10,
+        horizontal: 20.w,
+        vertical: 10.h,
       ),
 
       bodyPadding: EdgeInsets.symmetric(
-        horizontal: 30,
-        vertical: 8,
+        horizontal: 24.w,
+        vertical: 8.h,
       ),
 
       titleTextStyle: TextStyle(
         color: textColor,
-        fontSize: 26,
+        fontSize: 22.sp,
         fontWeight: FontWeight.w600,
         height: 1.2,
       ),
 
       bodyTextStyle: TextStyle(
         color: secondaryTextColor,
-        fontSize: 17,
-        height: 1.5,
+        fontSize: 15.sp,
+        height: 1.4,
       ),
 
       footerPadding: EdgeInsets.zero,

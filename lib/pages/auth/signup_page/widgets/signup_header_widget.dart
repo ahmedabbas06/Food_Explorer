@@ -42,10 +42,10 @@ class SignupHeader extends StatelessWidget {
           SizedBox(height: 7),
 
           Text(
-            'Join Food Explorer and discover amazing recipes',
+            'Join Akelaty and discover amazing recipes',
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Color(0xFFE4C7BC),
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
               fontSize: 14,
               fontWeight: FontWeight.w400,
             ),

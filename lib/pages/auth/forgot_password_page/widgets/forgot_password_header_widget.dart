@@ -40,12 +40,12 @@ class ForgotPasswordHeader extends StatelessWidget {
         SizedBox(height: 7),
 
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 18),
+          padding: const EdgeInsets.symmetric(horizontal: 18),
           child: Text(
             'Enter your email and we’ll send you a link\nto reset your password.',
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Color(0xFFC8AEA4),
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
               fontSize: 13,
               height: 1.45,
             ),
