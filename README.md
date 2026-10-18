@@ -196,56 +196,6 @@ lib/
 
 ---
 
-## 🚀 Getting Started
-
-### Prerequisites
-
-- [Flutter SDK](https://docs.flutter.dev/get-started/install) (`>= 3.12.2`)
-- [Android Studio](https://developer.android.com/studio) or [VS Code](https://code.visualstudio.com/) with Flutter extension
-- An active Android device, emulator, or iOS simulator
-
-### Installation
-
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/ahmedabbas06/Food_Explorer.git
-   ```
-
-2. **Navigate to the project root**:
-   ```bash
-   cd Food_Explorer
-   ```
-
-3. **Install project dependencies**:
-   ```bash
-   flutter pub get
-   ```
-
-4. **Run the application**:
-   ```bash
-   flutter run
-   ```
-
-> **Note**: Firebase configuration is integrated via `firebase_options.dart`. Ensure you have an active network connection for authentication and recipe fetching.
-
----
-
-## 📦 Build Release APK
-
-To generate a production release APK for Android devices:
-
-```bash
-flutter build apk --release
-```
-
-Upon successful compilation, the release APK can be found at:
-
-```plaintext
-build/app/outputs/flutter-apk/app-release.apk
-```
-
----
-
 ## 🔮 Future Improvements
 
 - [ ] **Multi-Language Support**: In-app localization with full Arabic and English language toggles.
@@ -262,3 +212,15 @@ Flutter Developer | Computer Science Student
 
 - GitHub: [https://github.com/ahmedabbas06](https://github.com/ahmedabbas06)
 - LinkedIn: [https://www.linkedin.com/in/ahmed-abdullah-abbas](https://www.linkedin.com/in/ahmed-abdullah-abbas)
+
+**Mohamed Sami**  
+Flutter Developer | Computer Science Student
+
+- GitHub: [https://github.com/mohamedasmy7291-afk](https://github.com/mohamedasmy7291-afk)
+- LinkedIn: [https://www.linkedin.com/in/mohamed-samy-flutter](https://www.linkedin.com/in/mohamed-samy-flutter)
+
+**Shrouk Hani**  
+Flutter Developer | Computer Science Student
+
+- GitHub: [https://github.com/ShroukHani319](https://github.com/ShroukHani319)
+- LinkedIn: [https://www.linkedin.com/in/shrouk-hani-1b79a628b](https://www.linkedin.com/in/shrouk-hani-1b79a628b)
